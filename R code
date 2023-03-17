@@ -1,112 +1,93 @@
+# How many datasets where recorded?
 data <- read.csv("CETM72 Assignment Dataset.csv") # Loading Data
 View(data)
-sapply(data, function(x)(sum(is.na(x)))) # Counting the  variables any missing!
+
+sapply(data, function(x)(sum(is.na(x)))) # Counting the variables any missing!
 names(data) # Variables names
-dim(data)   # Data Dimension
+
+dim(data) # Data Dimension
 summary(data) # Summary data
- # Renaming the columns for the ease of use
+
+# Renaming the columns for the ease of use
 names(data)[c(3)] <- c("CAT4.score") # Cognitive Abilities Test (CAT4) Level
-names(data)[c(4)] <- c("home.grown") # Student been enrolled 5 or more years?
-names(data)[c(5)] <- c("study_materials") # Student attempt on course materials.
 View(data)
+names(data)[c(4)] <- c("home.grown") # Length of Enrolment_Has the student been enrolled long back
+View(data)
+names(data)[c(5)] <- c("study_materials") # Student efforts and attempt on course materials.
+View(data)
+
 id <- rownames(data) # Generate id column
 data <- cbind(id=id, data)
 View(data)
-dim(data) # Dimension & summary of variables
-summary(data[,"math.score", drop=FALSE], statistics=c("mean", "sd", "IQR",  "quantiles", "skewness", "kurtosis"), quantiles=c(0,.25,.5,.75,1), type="2")
-summary(data[,"science.score", drop=FALSE], statistics=c("mean", "sd", "IQR", "quantiles", "skewness", "kurtosis"), quantiles=c(0,.25,.5,.75,1), type="2")
-summary(data[,"english.score", drop=FALSE], statistics=c("mean", "sd", "IQR", "quantiles", "skewness", "kurtosis"), quantiles=c(0,.25,.5,.75,1), type="2")
 
+dim(data) # Dimension & summary of variables
+summary(data[,"math.score", drop=FALSE], statistics=c("mean", "sd", "IQR",
+"quantiles", "skewness", "kurtosis"), quantiles=c(0,.25,.5,.75,1), type="2")
+summary(data[,"science.score", drop=FALSE], statistics=c("mean", "sd", "IQR",
+"quantiles", "skewness", "kurtosis"), quantiles=c(0,.25,.5,.75,1), type="2")
+summary(data[,"english.score", drop=FALSE], statistics=c("mean", "sd", "IQR",
+"quantiles", "skewness", "kurtosis"), quantiles=c(0,.25,.5,.75,1), type="2")
 
 ###################### DATA VISUALIZATION ######################
-boxplot(math.score) 
-mean(math.score)
-hist(math.score)          # Is Math score distribution normal?
-shapiro.test(math.score)  
-wilcox.test (math.score, mu=100, alternative="less")  
-boxplot(english.score)
-mean(english.score)
-hist(english.score)  # Is English scores distribution normal?
-shapiro.test(english.score)
-wilcox.test (english.score, mu=100, alternative="less") 
-boxplot(science.score)
-mean(science.score)
-hist(science.score) # Is Science scores distribution normal?
-shapiro.test(science.score)
-wilcox.test (science.score, mu=100, alternative="less") 
-
-
-
 # Does attempting the End of year study material affect student’s scores?
-boxplot(math.score~study_materials,data=data, col=rainbow(7), xlab=" study_materials", ylab="Math Score") # Maths study materials
-boxplot(english.score~study_materials,data=data, col=rainbow(9), xlab=" study_materials ", ylab="English Score") # English study materials
-boxplot(science.score~study_materials,data=data, col=rainbow(9), xlab=" study_materials ", ylab="science Score") # Science study materials
 
+boxplot(math.score~study_materials,data=data, col=rainbow(7), xlab="
+study_materials", ylab="Math Score") # Maths study materials
+boxplot(english.score~study_materials,data=data, col=rainbow(9), xlab="
+study_materials ", ylab="English Score") # English study materials
+boxplot(science.score~study_materials,data=data, col=rainbow(9), xlab="
+study_materials ", ylab="science Score") # Science study materials
 
 # Does gender influence student Performance in Exams?
-boxplot(math.score~gender,data=data, col=rainbow(7), xlab=" Gender", ylab="Math Score") 
-boxplot(english.score~gender,data=data, col=rainbow(9), xlab=" Gender", ylab="English Score") 
-boxplot(science.score~gender,data=data, col=rainbow(9), xlab=" Gender", ylab="science Score") 
- 
- 
- # Does student’s Cognitive Abilities Test (CAT4) result influence their Performance in Exams?
-boxplot(math.score~CAT4.score,data=data, col=rainbow(7), xlab=" CAT4.score", ylab="Math Score") 
-boxplot(english.score~CAT4.score,data=data, col=rainbow(9), xlab=" CAT4.score", ylab="English Score") 
-boxplot(science.score~CAT4.score,data=data, col=rainbow(9), xlab=" CAT4.score", ylab="science Score") 
+boxplot(math.score~gender,data=data, col=rainbow(7), xlab=" Gender", ylab="Math
+Score")
+boxplot(english.score~gender,data=data, col=rainbow(9), xlab=" Gender", ylab="English
+Score")
+boxplot(science.score~gender,data=data, col=rainbow(9), xlab=" Gender", ylab="science
+Score")
+
+# Does student’s Cognitive Abilities Test (CAT4) result influence their Performance in Exams?
+boxplot(math.score~CAT4.score,data=data, col=rainbow(7), xlab=" CAT4.score",  ylab="Math Score")
+boxplot(english.score~CAT4.score,data=data, col=rainbow(9), xlab=" CAT4.score", ylab="English Score")
+boxplot(science.score~CAT4.score,data=data, col=rainbow(9), xlab=" CAT4.score", ylab="science Score")
 
 
-# Independent t test and Correlation of Scores
-boxplot(mean(math.score),mean(english.score),col=rainbow(7),xlab="Math_score & English_score", ylab="Average of scores")
-t.test(math.score,english.score)
-t.test(math.score,english.score, alternative='less',mu=70)
-t.test(math.score,english.score, alternative='greater',mu=70)
-ggplot(data, aes(x = math.score, y =english.score)) + geom_point()    # Plotting the correlation graph of Math and English scores
-boxplot(mean(math.score),mean(science.score),col=rainbow(7),xlab="Math_score & Science_score", ylab="Average of scores")
-t.test(math.score,science.score)
-t.test(math.score,science.score, alternative='less',mu=70)
-t.test(math.score,science.score, alternative='greater',mu=70)
-ggplot(data, aes(x =math.score, y = science.score)) + geom_point() # Plotting the correlation graph of Math and Science scores
-boxplot(mean(english.score),mean(science.score),col=rainbow(7),xlab="Math_score & Science_score", ylab="Average of scores")
-t.test(english.score,science.score)
-t.test(english.score,science.score, alternative='less',mu=70)
-t.test(english.score,science.score, alternative='greater',mu=70)
-ggplot(data, aes(x =english.score, y = science.score)) + geom_point() # Plotting the correlation graph of English and Science
- 
- 
- #Creating data frame 
-set.seed(0)
-math.score <- rnorm(100) 
-english.score <- math.score + rnorm(100, 0, 2)
-science.score <- english.score - rnorm(100, 0, 5)
-df <- data.frame(math.score, english.score, science.score)
-pairs(df) 
-ggpairs(df)  # Pairs Plot of All Variables
- 
- #################### REGRESSION MODEL FOR EDUCATION DATA  #######################
-data[1]<- NULL  
+# Correlation of Scores
+ggplot(data, aes(x = math.score, y =english.score)) + geom_point() # math.score & english.sccore.
+ggplot(data, aes(x =science.score, y = english.score)) + geom_point() #science.score & english.score
+ggplot(data, aes(x =science.score, y = math.score)) + geom_point() #science.score &math.score
+
+###################### REGRESSION MODEL #########################
+data[1]<- NULL
 #Creating Testing and Training datasets.
-set.seed(1)  
-sample = sample(nrow(data), floor(nrow(data) * 0.8))  
+set.seed(1)
+sample = sample(nrow(data), floor(nrow(data) * 0.8))
 train = data[sample,]
 test = data[-sample,]
-dim(train) #Cheking dimension of training
-dim(test) #Cheking test data
 
+#Cheking dimension of training and test data
+dim(train)
+dim(test)
+#Creating model with training data for prediction of math score
+modelM <- lm(math.score~. , data=data)
+model_math = lm(math.score~., data = train)
+summary(model_math)
 
- #Creating model with the training data for prediction of Scores
-modelM <- lm(math.score~. , data=data) #Creating model to predict Math score
-model_math1 = lm(math.score~., data = train)
-summary(model_math1)
-pred_math = predict(model_math1, newdata = test)
-sqrt(mean((test$math.score - pred_math)^2))   
-summary(modelM)   
-modelE <- lm(english.score~. , data=data) #Creating model to predict English score
+pred_math = predict(model_math, newdata = test)
+sqrt(mean((test$math.score - pred_math)^2))
+summary(modelM)
+
+#Creating model for predicting English score
+modelE <- lm(english.score~. , data=data)
+
 model_english = lm(english.score~., data = train)
 summary(model_english)
 pred_english = predict(model_english, newdata = test)
 sqrt(mean((test$english.score - pred_english)^2))
-summary(modelE)   
-modelS <- lm(science.score~. , data=data) #Creating model to predict science score
+summary(modelE)
+
+#Creating model for predicting science score.
+modelS <- lm(science.score~. , data=data)
 model_science = lm(science.score~., data = train)
 summary(model_science)
 pred_science = predict(model_science, newdata = test)
